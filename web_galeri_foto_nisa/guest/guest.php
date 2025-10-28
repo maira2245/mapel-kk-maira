@@ -85,7 +85,7 @@ if (!isset($_SESSION['username'])) {
           <div class="image-caption">
             <h5>Agro Wisata Karungan (Tarakan)</h5>
             <p class="text-muted">Taman rekreasi keluarga seluas 3 hektare dengan hutan kecil, air terjun mini, jembatan gantung, gazebo, dan kolam pemancingan. Berjarak sekitar 14 km dari pusat kota.</p>
-         <a href="lihat_foto.php?id=1" class="btn btn-primary">Lihat</a>
+         <a href="detail.php?id=1" class="btn btn-primary">Lihat</a>
             <a href="#" class="btn btn-success">Tambah</a>
             <a href="#" class="btn btn-warning">Edit</a>
             <a href="#" class="btn btn-danger">Hapus</a>
@@ -100,7 +100,7 @@ if (!isset($_SESSION['username'])) {
             <h5>Mahesya Waterpark (Tana Tidung)</h5>
             <p class="text-muted">Waterpark pertama di Tana Tidung dengan berbagai kolam renang untuk semua usia. Tiket masuk sekitar Rp 20.000, sewa ban Rp 10.000.</p>
             
-            <a href="lihat_foto.php?id=2" class="btn btn-primary">Lihat</a>
+            <a href="detail.php?id=1" class="btn btn-primary">Lihat</a>
             <a href="#" class="btn btn-success">Tambah</a>
             <a href="#" class="btn btn-warning">Edit</a>
             <a href="#" class="btn btn-danger">Hapus</a>
@@ -114,7 +114,7 @@ if (!isset($_SESSION['username'])) {
           <div class="image-caption">
             <h5>Taman Nasional Kayan Mentarang</h5>
             <p class="text-muted">Hutan hujan tropis terluas di Kalimantan dengan keanekaragaman hayati tinggi. Cocok untuk trekking, birdwatching, dan pengalaman budaya di desa adat Dayak.</p>
-          <a href="lihat_foto.php?id=3" class="btn btn-primary">Lihat</a>
+          <a href="detail.php?id=1" class="btn btn-primary">Lihat</a>
             <a href="#" class="btn btn-success">Tambah</a>
             <a href="#" class="btn btn-warning">Edit</a>
             <a href="#" class="btn btn-danger">Hapus</a>
@@ -128,7 +128,7 @@ if (!isset($_SESSION['username'])) {
           <div class="image-caption">
             <h5>Tanah Kuning (Kabupaten Bulungan)</h5>
             <p class="text-muted">Pantai eksotis di Desa Mangku Padi, air bersih dan pasir putih bersih. Harap berhati-hati karena ombak besar pengunjung hanya bisa berenang di tepian.</p>
-        <a href="lihat_foto.php?id=4" class="btn btn-primary">Lihat</a>
+        <a href="detail.php?id=1" class="btn btn-primary">Lihat</a>
             <a href="#" class="btn btn-success">Tambah</a>
             <a href="#" class="btn btn-warning">Edit</a>
             <a href="#" class="btn btn-danger">Hapus</a>
@@ -142,7 +142,7 @@ if (!isset($_SESSION['username'])) {
           <div class="image-caption">
             <h5>Air Terjun Gunung Rian (Tana Tidung)</h5>
             <p class="text-muted">Air terjun setinggi sekitar 90 m dengan aliran jernih di tengah hutan tropis. Terdiri dari tujuh tingkatan, tapi yang sering dikunjungi hanya tingkat pertama dan kedua.</p>
-         <a href="lihat_foto.php?id=5" class="btn btn-primary">Lihat</a>
+         <a href="detail.php?id=1" class="btn btn-primary">Lihat</a>
             <a href="#" class="btn btn-success">Tambah</a>
             <a href="#" class="btn btn-warning">Edit</a>
             <a href="#" class="btn btn-danger">Hapus</a>
@@ -152,12 +152,12 @@ if (!isset($_SESSION['username'])) {
       <!-- Foto 6 -->
       <div class="col-md-4 col-sm-6 col-12">
         <div class="gallery-item">
-          <img src="https://live.staticflickr.com/4075/4950335764_dc12184b15.jpg" alt=""> 
+          <img src="https://www.celebes.co/borneo/wp-content/uploads/2020/07/Gunung-Putih.webp" alt=""> 
           <div class="image-caption">
             <h5>Gunung Putih (Bulungan)</h5>
             <p class="text-muted">Bukit kapur berwarna putih nan memesona, dilengkapi tangga menuju puncak dengan pemandangan Sungai Kayan, cocok untuk trekking ringan atau olahraga.</p>
             
-            <a href="lihat_foto.php?id=6" class="btn btn-primary">Lihat</a>
+            <a href="detail.php?id=1" class="btn btn-primary">Lihat</a>
             <a href="#" class="btn btn-success">Tambah</a>
             <a href="#" class="btn btn-warning">Edit</a>
             <a href="#" class="btn btn-danger">Hapus</a>
