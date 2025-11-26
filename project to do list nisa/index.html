@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aplikasi Pencatatan Tugas Sekolah</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome (CSS) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+
+  <style>
+    /* Keyframes + utility */
+    @keyframes fadeInY {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .fade-in {
+      animation: fadeInY 0.4s ease-in-out;
+    }
+
+    /* Custom scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #2563eb;
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-blue-100 via-white to-green-100 min-h-screen font-sans">
+  <div class="container mx-auto max-w-2xl p-6">
+    <!-- Header -->
+    <header class="text-center mb-8 fade-in">
+      <h1 class="text-4xl font-bold text-gray-800 mb-2">Aplikasi Pencatatan Tugas Sekolah</h1>
+      <p class="text-gray-600">
+        Aplikasi pencatatan tugas sekolah ini membantu siswa mencatat tugas dari guru dengan mudah.
+      </p>
+    </header>
+
+    <!-- Add Task Form -->
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-6 fade-in">
+      <form id="addTaskForm" class="flex flex-col gap-4">
+        <input
+          type="text"
+          id="taskInput"
+          placeholder="Tuliskan deskripsi tugas..."
+          class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+          required
+        />
+
+        <input
+          type="text"
+          id="subjectInput"
+          placeholder="Mata pelajaran..."
+          class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+          required
+        />
+
+        <div>
+          <label for="deadlineInput" class="text-gray-700 font-semibold block mb-2">
+            Deadline (Batas Akhir Pengerjaan Tugas):
+          </label>
+          <input
+            type="date"
+            id="deadlineInput"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-md"
+        >
+          <i class="fas fa-plus mr-2"></i> Tambah Tugas
+        </button>
+      </form>
+    </div>
+
+    <!-- Task List -->
+    <div class="bg-white rounded-xl shadow-lg p-6 fade-in">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
+        <i class="fas fa-list-ul mr-3 text-blue-600"></i> Daftar Tugasku
+      </h2>
+
+      <ul id="taskList" class="space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
+        <!-- Tasks injected here -->
+      </ul>
+    </div>
+  </div>
+
+  <!-- Edit Modal (hidden by default) -->
+  <div
+    id="editModal"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300"
+    aria-hidden="true"
+  >
+    <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+      <h3 class="text-xl font-semibold mb-4 text-gray-800">Ubah Tugas</h3>
+      <form id="editForm" class="flex flex-col gap-4">
+        <input
+          type="text"
+          id="editTaskInput"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          required
+        />
+        <input
+          type="text"
+          id="editSubjectInput"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          required
+        />
+        <div>
+          <label for="editDeadlineInput" class="text-gray-700 font-semibold block mb-2">
+            Deadline (Batas Akhir Pengerjaan Tugas):
+          </label>
+          <input
+            type="date"
+            id="editDeadlineInput"
+            class="w-full px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            required
+          />
+        </div>
+
+        <div class="flex gap-4">
+          <button
+            type="submit"
+            id="saveEditBtn"
+            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex-1 transition"
+          >
+            Simpan
+          </button>
+          <button
+            type="button"
+            id="cancelEditBtn"
+            class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex-1 transition"
+          >
+            Batal
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Elements (IDs must match HTML)
+    const taskInput = document.getElementById("taskInput");
+    const subjectInput = document.getElementById("subjectInput");
+    const deadlineInput = document.getElementById("deadlineInput");
+    const addTaskForm = document.getElementById("addTaskForm");
+    const taskList = document.getElementById("taskList");
+
+    const editModal = document.getElementById("editModal");
+    const editForm = document.getElementById("editForm");
+    const editTaskInput = document.getElementById("editTaskInput");
+    const editSubjectInput = document.getElementById("editSubjectInput");
+    const editDeadlineInput = document.getElementById("editDeadlineInput");
+    const cancelEditBtn = document.getElementById("cancelEditBtn");
+
+    // Data
+    let tasks = JSON.parse(localStorage.getItem("schoolTasks")) || [];
+    let editIndex = null;
+
+    // Save to localStorage
+    function saveTasks() {
+      localStorage.setItem("schoolTasks", JSON.stringify(tasks));
+    }
+
+    // Render tasks
+    function loadTasks() {
+      taskList.innerHTML = "";
+
+      if (!tasks || tasks.length === 0) {
+        taskList.innerHTML = '<li class="text-center text-gray-500">Belum ada tugas.</li>';
+        return;
+      }
+
+      tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+        li.className = `flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200 fade-in ${task.completed ? "opacity-75" : ""}`;
+
+        // Left: checkbox + info
+        const leftDiv = document.createElement("div");
+        leftDiv.className = "flex items-center gap-4 flex-1";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = !!task.completed;
+        checkbox.className = "w-5 h-5";
+        checkbox.addEventListener("change", () => {
+          tasks[index].completed = checkbox.checked;
+          saveTasks();
+          loadTasks();
+        });
+
+        const textDiv = document.createElement("div");
+        textDiv.className = "flex flex-col";
+
+        const taskTextSpan = document.createElement("span");
+        taskTextSpan.textContent = task.text;
+        taskTextSpan.className = `font-semibold ${task.completed ? "line-through text-gray-500" : "text-gray-800"}`;
+
+        const subjectSpan = document.createElement("span");
+        subjectSpan.textContent = `Mapel: ${task.subject}`;
+        subjectSpan.className = `text-sm ${task.completed ? "line-through text-gray-400" : "text-blue-600"}`;
+
+        const deadlineSpan = document.createElement("span");
+        const d = new Date(task.deadline);
+        const formatted = isNaN(d.getTime()) ? (task.deadline || "") : d.toLocaleDateString("id-ID", { year: "numeric", month: "short", day: "numeric" });
+        deadlineSpan.textContent = `Deadline: ${formatted}`;
+        deadlineSpan.className = `text-sm ${task.completed ? "line-through text-gray-400" : "text-red-600"}`;
+
+        textDiv.appendChild(taskTextSpan);
+        textDiv.appendChild(subjectSpan);
+        textDiv.appendChild(deadlineSpan);
+
+        leftDiv.appendChild(checkbox);
+        leftDiv.appendChild(textDiv);
+
+        // Right: buttons
+        const rightDiv = document.createElement("div");
+        rightDiv.className = "flex gap-2";
+
+        const editBtn = document.createElement("button");
+        editBtn.innerHTML = '<i class="fas fa-edit text-blue-600"></i>';
+        editBtn.className = "hover:bg-blue-100 p-2 rounded transition";
+        editBtn.addEventListener("click", () => openEditModal(index));
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.innerHTML = '<i class="fas fa-trash-alt text-red-600"></i>';
+        deleteBtn.className = "hover:bg-red-100 p-2 rounded transition";
+        deleteBtn.addEventListener("click", () => {
+          if (confirm("Hapus tugas ini?")) {
+            tasks.splice(index, 1);
+            saveTasks();
+            loadTasks();
+          }
+        });
+
+        rightDiv.appendChild(editBtn);
+        rightDiv.appendChild(deleteBtn);
+
+        li.appendChild(leftDiv);
+        li.appendChild(rightDiv);
+
+        taskList.appendChild(li);
+      });
+    }
+
+    // Add Task
+    addTaskForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const taskText = taskInput.value.trim();
+      const subjectText = subjectInput.value.trim();
+      const deadlineDate = deadlineInput.value;
+
+      if (taskText && subjectText && deadlineDate) {
+        tasks.push({
+          text: taskText,
+          subject: subjectText,
+          deadline: deadlineDate,
+          completed: false
+        });
+        saveTasks();
+        loadTasks();
+        addTaskForm.reset();
+        taskInput.focus();
+      } else {
+        alert("Mohon isi semua field (deskripsi, mata pelajaran, deadline).");
+      }
+    });
+
+    // Open Edit Modal
+    function openEditModal(index) {
+      editIndex = index;
+      const task = tasks[index];
+      editTaskInput.value = task.text;
+      editSubjectInput.value = task.subject;
+      editDeadlineInput.value = task.deadline || "";
+      editModal.classList.add("opacity-100", "pointer-events-auto");
+      editModal.classList.remove("opacity-0", "pointer-events-none");
+      editModal.setAttribute("aria-hidden", "false");
+      editTaskInput.focus();
+    }
+
+    // Save Edited Task
+    editForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (editIndex === null) return;
+      const newText = editTaskInput.value.trim();
+      const newSubject = editSubjectInput.value.trim();
+      const newDeadline = editDeadlineInput.value;
+
+      if (newText && newSubject && newDeadline) {
+        tasks[editIndex].text = newText;
+        tasks[editIndex].subject = newSubject;
+        tasks[editIndex].deadline = newDeadline;
+        saveTasks();
+        loadTasks();
+        closeEditModal();
+      } else {
+        alert("Mohon isi semua field saat mengubah tugas.");
+      }
+    });
+
+    // Close Edit Modal
+    cancelEditBtn.addEventListener("click", closeEditModal);
+    function closeEditModal() {
+      editModal.classList.remove("opacity-100", "pointer-events-auto");
+      editModal.classList.add("opacity-0", "pointer-events-none");
+      editModal.setAttribute("aria-hidden", "true");
+      editIndex = null;
+    }
+
+    // Close modal with Escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && editModal.classList.contains("opacity-100")) {
+        closeEditModal();
+      }
+    });
+
+    // Initial load
+    loadTasks();
+  </script>
+</body>
+</html>
